@@ -49,6 +49,7 @@ $(document).ready(function () {
         e.preventDefault();
         return false;
     });
+    
     let dtblBD = $('#dtblBD').DataTable({
         lengthMenu: [
             [10, 25, 50, 100, 200, 500, 1000],
@@ -75,12 +76,12 @@ $(document).ready(function () {
             { "data": 'name', "name": "name", "sWidth": "10%" },
             { "data": 'contact_no', "name": "contact_no", "sWidth": "8%", "className": "text-center" },
             { "data": 'detailed_address', "name": "detailed_address", "sWidth": "25%" },
-            { "data": 'booking_on', "name": "booking_on", "sWidth": "8%", "className": "text-center" },
-            { "data": 'take_off_on', "name": "take_off_on", "sWidth": "8%", "className": "text-center" },
+            { "data": 'booking_on', "name": "booking_on", "sWidth": "7%", "className": "text-center" },
+            { "data": 'take_off_on', "name": "take_off_on", "sWidth": "7%", "className": "text-center" },
             { "data": 'scrap_price', "name": "scrap_price", "sWidth": "6%", "className": "text-right" },
             { "data": 'signature', "name": "signature", "sWidth": "6%", "visible": false },
             {
-                "data": 'status', "name": "status", "sWidth": "5%", "className": "text-center",
+                "data": 'status', "name": "status", "sWidth": "4%", "className": "text-center",
                 mRender: function (data, type, val) {
                     if (val.status == 1) {
                         return `<i class='fa fa-check' style='color:green; font-weight:bolder'></i>`;
@@ -91,10 +92,30 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": null, "name": "action", "sWidth": "5%", "className": "text-center",
-                "defaultContent": `<button class='btn btn-warning btn-sm action-btn' onclick='UpdateActive(event)'><i class='fa fa-edit'></i></button>`
+                "data": null, "name": "action", "sWidth": "8%", "className": "text-center",
+                "defaultContent": `<button class='btn btn-warning btn-xs action-btn' onclick='UpdateActive(event)'><i class='fa fa-edit'></i></button>
+                &nbsp;<button class='btn btn-dark btn-xs action-btn' onclick='ViewItem(event)'><i class='fa fa-eye'></i></button>`
             }
         ],
+        "footerCallback": function () {
+            var api = this.api();
+            // Remove the formatting to get integer data for summation
+            var intVal = function (i) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '') * 1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+            // Total over all pages
+            total_price = api.column(8).data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
+            // Update footer
+            $(api.column(8).footer()).html(
+                total_price
+            );
+        },
         buttons: [
             {
                 text: '<button onclick="MassUpdate()" class="btn btn-success btn-sm"><i class="fa fa-tasks"></i>&nbsp;Mass Update</button>',
@@ -183,6 +204,54 @@ $(document).ready(function () {
                 }
             }
         ]
+    });
+
+    let dtbleUserItems = $('#dtbleUserItems').DataTable({
+        bProcessing: false,//server side pagination
+        bServerSide: false,//server side pagination
+        bStateSave: false,
+        bPaginate: false,
+        bLengthChange: true,
+        bFilter: true,
+        bSort: false,
+        bInfo: true,
+        bAutoWidth: false,
+        bDestroy: true,
+        "sDom": "<'row'<'col-lg-5 col-md-5 col-sm-5'><'col-lg-3 col-md-3 col-sm-3'l><'col-lg-4 col-md-4 col-sm-4'>>" +
+            "<'row'<'col-lg-12 col-md-12 col-sm-12'tr>>" +
+            "<'row'<'col-lg-9 col-md-9 col-sm-9'i><'col-lg-3 col-md-3 col-sm-3'p>>",
+        "aoColumns": [
+            { "data": 'item_detail', "name": "item_detail", "sWidth": "50%", "className": "text-left" },
+            { "data": 'quantity', "name": "quantity", "sWidth": "25%", "className": "text-right" },
+            { "data": 'price_given', "name": "price_given", "sWidth": "25%", "className": "text-right" }
+        ],
+        "footerCallback": function () {
+            var api = this.api();
+            // Remove the formatting to get integer data for summation
+            var intVal = function (i) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '') * 1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+            // Total over all pages
+            total_quantity = api.column(1).data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
+            total_price = api.column(2).data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
+
+            // Update footer
+            $(api.column(1).footer()).html(
+                total_quantity
+            );
+            $(api.column(2).footer()).html(
+                total_price
+            );
+        }
     });
 
     $("#btnSaveActive").click(function () {
@@ -368,4 +437,36 @@ function MassUpdate() {
             }
         });
     }, function (dismiss) { }).done();
+}
+
+function ViewItem(event) {
+    var dtblBD = $('#dtblBD').dataTable();
+    $(dtblBD.fnSettings().aoData).each(function () {
+        $(this.nTr).removeClass('success');
+    });
+    var row;
+    if (event.target.tagName == "BUTTON" || event.target.tagName == "A")
+        row = event.target.parentNode.parentNode;
+    else if (event.target.tagName == "I")
+        row = event.target.parentNode.parentNode.parentNode;
+    LoadItemsList(dtblBD.fnGetData(row)['code']);
+    $("#modalUserItemHeader").html(dtblBD.fnGetData(row)['name']+' ('+dtblBD.fnGetData(row)['code']+')');
+    $('#modalUserItem').modal('show');
+}
+
+function LoadItemsList(booking_id) {
+    $.ajax({
+        "url": "../api/EmpUpdateBooking?action=GetItemsList",
+        type: "POST",
+        data: {booking_id: booking_id},
+        success: function (response) {
+            var res = JSON.parse(response);
+            var table = $('#dtbleUserItems').DataTable();
+            table.clear().draw();
+            table.rows.add(res.aaData).draw();
+        },
+        error: function () {
+            toastr.error('Unable to table please contact support');
+        }
+    });
 }

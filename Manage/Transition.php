@@ -85,7 +85,23 @@ if($_SESSION['user_type'] != "ADMIN" && $_SESSION['user_type'] != "MANAGER"){
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+								</tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Total: </th>
+										<th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
 						<div id="modalActive" class="modal fade" role="dialog">
@@ -160,6 +176,47 @@ if($_SESSION['user_type'] != "ADMIN" && $_SESSION['user_type'] != "MANAGER"){
 								</div>
 							</div>
             			</div>
+						<div id="modalUserItem" class="modal fade" role="dialog">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+											<h5 class="modal-title" id="modalUserItemHeader"></h5>
+										</div>
+										<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+										</div>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+												<table class="table table-striped table-bordered" id="dtbleUserItems">
+													<thead class="bg-primary">
+														<tr>
+															<th class="text-center">Item</th>
+															<th class="text-center">Quantity</th>
+															<th class="text-center">Price</th>
+														</tr>
+													</thead>
+													<tbody>
+													</tbody>
+													<tfoot>
+														<tr>
+															<th>Total: </th>
+															<th></th>
+															<th></th>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
                     </div>
                 </div>
                 <!--Booking Details Tab-1 End-->
