@@ -1,0 +1,67 @@
+body {
+    background-color: #b4b8ab;
+}
+
+.card .fa {
+    margin-top: 5%;
+    font-size: 50px;
+}
+
+.card {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10%;
+    position: relative;
+    border-radius: 5%;
+    text-align: center;
+    color: white;
+}
+
+.card a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.card:hover {
+    -ms-transform: scale(0.8);
+    /* IE 9 */
+    -webkit-transform: scale(0.8);
+    /* Safari 3-8 */
+    transform: scale(0.8);
+    transition: 0.5s;
+}
+
+.required {
+    color: #f30b0b;
+}
+
+.action-btn {
+    border-radius: 50%;
+}
+
+/* Common User styles */
+.sidepanel {
+    width: 0;
+    position: fixed;
+    z-index: 2;
+    height: 90%;
+    left: 0;
+    background-color: #eea236;
+    opacity: 0.9;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidepanel a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    display: block;
+}
+
+.sidepanel a:hover {
+    color: #000;
+}

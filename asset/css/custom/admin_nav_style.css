@@ -1,0 +1,32 @@
+.nav-menu {
+    text-align: center;
+}
+
+.nav-menu a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.nav-menu a:hover {
+    color: rgb(58, 54, 54);
+    background-color: rgb(187, 140, 11);
+    text-decoration: none;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+    color: #555;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    font-weight: bolder;
+    color: rgb(188, 115, 13);
+}
+
+.nav-tabs {
+    background-color: rgb(57, 57, 56);
+    font-weight: bold;
+}
